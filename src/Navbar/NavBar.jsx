@@ -1,11 +1,33 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../Provider/Auth_Provider';
 
 const NavBar = () => {
+  const navigate=useNavigate()
+  const { user, logOut } = useContext(AuthContext);
+  const handleLogOut = () => { 
+    logOut()
+      .then(() => {
+       
+      })
+      .catch((error) => {
+        const message = error.message;
+        console.log(message)
+      });
+     navigate("/login");
+  }
     return (
       <div>
-        <div className="navbar bg-base-100 bg-purple-600">
-          <div className="flex-1">
-            <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
+        <div className="navbar  bg-purple-600 flex flex-col  md:flex-row justify-between">
+          <div className="">
+            <a className="btn btn-ghost normal-case text-xl ">daisyUI</a>
+            <div className=' flex flex-col md:flex-row gap-2'>
+              <Link to='/'>Home</Link>
+              <Link to='/login'>Login</Link>
+              <Link to='/register'>Register</Link>
+              { user&& <Link to='/order'>Order</Link>}
+              
+            </div>
           </div>
           <div className="flex-none">
             <div className="dropdown dropdown-end">
@@ -43,10 +65,11 @@ const NavBar = () => {
                 </div>
               </div>
             </div>
-            <div className="dropdown dropdown-end">
+            {
+            user?<div className="dropdown dropdown-end">
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                <div className="w-10 rounded-full">
-                  <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                <div className="w-10 ">
+                    { user.email}
                 </div>
               </label>
               <ul
@@ -63,10 +86,10 @@ const NavBar = () => {
                   <a>Settings</a>
                 </li>
                 <li>
-                  <a>Logout</a>
+                  <button onClick={()=>handleLogOut()}>Logout</button>
                 </li>
               </ul>
-            </div>
+            </div>:<Link to='/login'></Link>}
           </div>
         </div>
       </div>
